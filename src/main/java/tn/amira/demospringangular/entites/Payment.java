@@ -3,6 +3,7 @@ package tn.amira.demospringangular.entites;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.File;
 import java.time.LocalDate;
 
 @Entity
@@ -17,5 +18,6 @@ public class Payment {
     private PaymentStatus status;
     @ManyToOne
     private Student student;
+    private String file;
 
 }
