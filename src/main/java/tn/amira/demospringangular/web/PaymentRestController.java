@@ -12,6 +12,7 @@ import tn.amira.demospringangular.repository.PaymentRepository;
 import tn.amira.demospringangular.repository.StudentRepository;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,7 +58,7 @@ public class PaymentRestController {
     }
     @PutMapping(path = "/payment/{id}")
     public Payment updatePayementStatus(@RequestParam PaymentStatus status, @PathVariable Long id) {
-        Payment payment = paymentRepository.findById(id).get();
+        Payment payment = paymentRepository.findById(id).orElse(null);
         payment.setStatus(status);
         return paymentRepository.save(payment);
     }
@@ -78,5 +79,10 @@ public class PaymentRestController {
             .status(PaymentStatus.CREATED)
             .build();
     return paymentRepository.save(payment);
+    }
+    @GetMapping(path = "/paymentFile/{paymentId}",produces = MediaType.APPLICATION_PDF_VALUE)
+    public byte[] getPaymentFile(@PathVariable Long paymentId) throws IOException {
+        Payment payment = paymentRepository.findById(paymentId).orElse(null);
+        return Files.readAllBytes(Path.of(URI.create(payment.getFile())));
     }
 }
