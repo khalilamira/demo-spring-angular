@@ -1,6 +1,5 @@
 package tn.amira.demospringangular.web;
 
-
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,6 +9,7 @@ import tn.amira.demospringangular.entites.PaymentType;
 import tn.amira.demospringangular.entites.Student;
 import tn.amira.demospringangular.repository.PaymentRepository;
 import tn.amira.demospringangular.repository.StudentRepository;
+import tn.amira.demospringangular.services.PaymentService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,10 +23,12 @@ import java.util.List;
 public class PaymentRestController {
     private PaymentRepository paymentRepository;
     private StudentRepository studentRepository;
+    private PaymentService paymentService;
 
-    public PaymentRestController(PaymentRepository paymentRepository, StudentRepository studentRepository) {
+    public PaymentRestController(PaymentRepository paymentRepository, StudentRepository studentRepository,PaymentService paymentService) {
         this.paymentRepository = paymentRepository;
         this.studentRepository = studentRepository;
+        this.paymentService = paymentService;
     }
     @GetMapping(path = "/payments")
     public List<Payment> allPayments() {
@@ -57,32 +59,16 @@ public class PaymentRestController {
         return studentRepository.findByCode(code);
     }
     @PutMapping(path = "/payment/{id}")
-    public Payment updatePayementStatus(@RequestParam PaymentStatus status, @PathVariable Long id) {
-        Payment payment = paymentRepository.findById(id).orElse(null);
-        payment.setStatus(status);
-        return paymentRepository.save(payment);
+    public Payment updatePaymentStatus(@RequestParam PaymentStatus status, @PathVariable Long id) {
+        return this.paymentService.updatePaymentStatus(status, id);
     }
     @PostMapping(path = "/payments",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Payment savePayment(@RequestParam MultipartFile file, LocalDate date,double amount,
                                PaymentType type,String studentCode) throws IOException {
-    Path folderPath = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "payments");
-    if (!Files.exists(folderPath)) {
-        Files.createDirectories(folderPath);
-    }
-    Path filePath = Paths.get(folderPath.toString(), file.getOriginalFilename());
-    Files.copy(file.getInputStream(), filePath);
-    Student student = studentRepository.findByCode(studentCode);
-    Payment payment = Payment.builder()
-            .date(date).type(type).student(student)
-            .amount(amount)
-            .file(filePath.toUri().toString())
-            .status(PaymentStatus.CREATED)
-            .build();
-    return paymentRepository.save(payment);
+        return this.paymentService.savePayment(file,date,amount,type,studentCode);
     }
     @GetMapping(path = "/paymentFile/{paymentId}",produces = MediaType.APPLICATION_PDF_VALUE)
-    public byte[] getPaymentFile(@PathVariable Long paymentId) throws IOException {
-        Payment payment = paymentRepository.findById(paymentId).orElse(null);
-        return Files.readAllBytes(Path.of(URI.create(payment.getFile())));
+    public byte[] getPaymentFile(@PathVariable Long paymentId) throws IOException {Payment payment = paymentRepository.findById(paymentId).orElse(null);
+        return paymentService.getPaymentFile(paymentId);
     }
 }
