@@ -3,33 +3,33 @@
     <mat-icon>account_balance</mat-icon>
   </button>
   <span style="flex: auto"></span>
-  <button mat-button>Home</button>
-  <button mat-button>Profile</button>
+  <button mat-button routerLink="/home">Home</button>
+  <button mat-button routerLink="/profile">Profile</button>
   <button mat-button [matMenuTriggerFor]="importMenu">
     <mat-icon iconPositionEnd>keyboard_arrow_down</mat-icon>
     Import
   </button>
   <mat-menu #importMenu>
-      <button mat-menu-item>Load Students</button>
-      <button mat-menu-item>Load Payments</button>
+      <button mat-menu-item  routerLink="/loadStudents">Load Students</button>
+      <button mat-menu-item  routerLink="/loadPayments">Load Payments</button>
   </mat-menu>
-  <button mat-button color="accent">Logout</button>
+  <button mat-button color="accent"  routerLink="/login">Logout</button>
 </mat-toolbar>
 <mat-drawer-container>
   <mat-drawer opened="true" mode="side" position="start">
     <mat-list>
       <mat-list-item >
-        <button mat-button>
+        <button mat-button  routerLink="/dashboard">
           <mat-icon>dashboard</mat-icon>
           Dashbord</button>
       </mat-list-item>
       <mat-list-item >
-        <button mat-button>
+        <button mat-button routerLink="/students">
           <mat-icon>dashboard</mat-icon>
           Students</button>
       </mat-list-item>
       <mat-list-item >
-        <button mat-button>
+        <button mat-button routerLink="/payments">
           <mat-icon>dashboard</mat-icon>
           Payments</button>
       </mat-list-item>
@@ -37,8 +37,7 @@
   </mat-drawer>
   <mat-drawer-content>
     <div style="min-height: 600px">
-        <router-outlet>
-        </router-outlet>
+        <router-outlet></router-outlet>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
