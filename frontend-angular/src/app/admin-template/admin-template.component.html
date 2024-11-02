@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button>
+  <button mat-icon-button (click)="myDrawer.toggle()">
     <mat-icon>account_balance</mat-icon>
   </button>
   <span style="flex: auto"></span>
@@ -16,7 +16,7 @@
   <button mat-button color="accent"  routerLink="/login">Logout</button>
 </mat-toolbar>
 <mat-drawer-container>
-  <mat-drawer opened="true" mode="side" position="start">
+  <mat-drawer #myDrawer opened="true" mode="side" position="start">
     <mat-list>
       <mat-list-item >
         <button mat-button  routerLink="/dashboard">
