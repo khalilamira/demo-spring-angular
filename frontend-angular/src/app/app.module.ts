@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { StudentsComponent } from './students/students.component';
 import { PaymentsComponent } from './payments/payments.component';
 import { DashbordComponent } from './dashbord/dashbord.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DashbordComponent } from './dashbord/dashbord.component';
     MatMenuModule,
     MatSidenavModule,
     MatIcon,
-    MatListModule
+    MatListModule,
+    MatCardModule
   ],
   providers: [
     provideAnimationsAsync()
